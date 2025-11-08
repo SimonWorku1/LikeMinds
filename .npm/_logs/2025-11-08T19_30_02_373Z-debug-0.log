@@ -1,0 +1,20 @@
+0 verbose cli /opt/homebrew/Cellar/node/22.9.0_1/bin/node /opt/homebrew/bin/npm
+1 info using npm@11.0.0
+2 info using node@v22.9.0
+3 silly config load:file:/opt/homebrew/lib/node_modules/npm/npmrc
+4 silly config load:file:/Users/silly/.npmrc
+5 silly config load:file:/opt/homebrew/etc/npmrc
+6 verbose title npm create vite@latest . --template react-ts --force
+7 verbose argv "create" "vite@latest" "." "--" "--template" "react-ts" "--force"
+8 verbose logfile logs-max:10 dir:/Users/silly/Documents/GitHub/LikeMinds/.npm/_logs/2025-11-08T19_30_02_373Z-
+9 verbose logfile /Users/silly/Documents/GitHub/LikeMinds/.npm/_logs/2025-11-08T19_30_02_373Z-debug-0.log
+10 silly logfile done cleaning log files
+11 silly packumentCache heap:2197815296 maxSize:549453824 maxEntrySize:274726912
+12 http fetch GET 200 https://registry.npmjs.org/create-vite 151ms (cache revalidated)
+13 silly packumentCache heap:2197815296 maxSize:549453824 maxEntrySize:274726912
+14 verbose cwd /Users/silly/Documents/GitHub/LikeMinds
+15 verbose os Darwin 24.4.0
+16 verbose node v22.9.0
+17 verbose npm  v11.0.0
+18 verbose exit 0
+19 info ok
