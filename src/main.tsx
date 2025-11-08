@@ -10,6 +10,7 @@ import ChatPage from './pages/Chat'
 import Profile from './pages/Profile'
 import { AuthProvider } from './context/AuthProvider'
 import ErrorPage from './pages/ErrorPage'
+import Inbox from './pages/Inbox'
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,7 @@ const router = createBrowserRouter([
       { index: true, element: <Landing /> },
       { path: 'auth', element: <Auth /> },
       { path: 'verify', element: <VerifyTutor /> },
+      { path: 'inbox', element: <Inbox /> },
       { path: 'chat/:chatId', element: <ChatPage /> },
       { path: 'profile', element: <Profile /> }
     ]

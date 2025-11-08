@@ -51,12 +51,12 @@ export default function App() {
                 <NavLink to="/verify" className="text-slate-700 hover:text-brand">
                   Verify
                 </NavLink>
-                <span className="relative inline-flex items-center">
-                  <span className="text-slate-700">Inbox</span>
+                <NavLink to="/inbox" className="relative inline-flex items-center text-slate-700 hover:text-brand">
+                  <span>Inbox</span>
                   {unread > 0 && (
                     <span className="ml-2 rounded-full bg-brand text-white text-xs px-2 py-0.5">{unread}</span>
                   )}
-                </span>
+                </NavLink>
               </>
             )}
             {!user ? (
