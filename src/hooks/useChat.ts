@@ -24,10 +24,18 @@ export function useChat(chatId?: string) {
     if (!chatId) return
     const msgsRef = collection(db, 'chats', chatId, 'messages')
     const q = query(msgsRef, orderBy('createdAt'))
-    const unsub = onSnapshot(q, (snap) => {
-      const list = snap.docs.map((d) => ({ id: d.id, ...(d.data() as any) }))
-      setMessages(list)
-    })
+    const unsub = onSnapshot(
+      q,
+      (snap) => {
+        const list = snap.docs.map((d) => ({ id: d.id, ...(d.data() as any) }))
+        setMessages(list)
+      },
+      (err) => {
+        // eslint-disable-next-line no-console
+        console.warn('Messages listener error', err)
+        setMessages([])
+      }
+    )
     return () => unsub()
   }, [chatId])
 

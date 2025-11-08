@@ -6,20 +6,20 @@ import App from './App'
 import Auth from './pages/Auth'
 import Landing from './pages/Landing'
 import VerifyTutor from './pages/VerifyTutor'
-import Admin from './pages/Admin'
 import ChatPage from './pages/Chat'
 import Profile from './pages/Profile'
 import { AuthProvider } from './context/AuthProvider'
+import ErrorPage from './pages/ErrorPage'
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <App />,
+    errorElement: <ErrorPage />,
     children: [
       { index: true, element: <Landing /> },
       { path: 'auth', element: <Auth /> },
       { path: 'verify', element: <VerifyTutor /> },
-      { path: 'admin', element: <Admin /> },
       { path: 'chat/:chatId', element: <ChatPage /> },
       { path: 'profile', element: <Profile /> }
     ]

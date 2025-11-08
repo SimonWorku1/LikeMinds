@@ -5,13 +5,14 @@ import Card from '../components/Card'
 import Button from '../components/Button'
 import { useAuth } from '../hooks/useAuth'
 import { db, storage } from '../firebase'
-import { Navigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 
 export default function VerifyTutor() {
   const { user } = useAuth()
   const [files, setFiles] = useState<FileList | null>(null)
   const [status, setStatus] = useState<'none' | 'pending' | 'approved' | 'rejected'>('none')
   const [loading, setLoading] = useState(true)
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (!user) return
@@ -49,6 +50,7 @@ export default function VerifyTutor() {
       verified: true
     }, { merge: true })
     setStatus('approved')
+    navigate('/profile?setup=tutor')
   }
 
   return (

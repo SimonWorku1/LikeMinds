@@ -14,14 +14,21 @@ export default function App() {
       return
     }
     const qChats = query(collection(db, 'chats'), where('participantIds', 'array-contains', user.uid))
-    const unsub = onSnapshot(qChats, (snap) => {
-      let total = 0
-      snap.forEach((d) => {
-        const data = d.data() as any
-        total += data?.unread?.[user.uid] || 0
-      })
-      setUnread(total)
-    })
+    const unsub = onSnapshot(
+      qChats,
+      (snap) => {
+        let total = 0
+        snap.forEach((d) => {
+          const data = d.data() as any
+          total += data?.unread?.[user.uid] || 0
+        })
+        setUnread(total)
+      },
+      (err) => {
+        // eslint-disable-next-line no-console
+        console.warn('Inbox listener error', err)
+      }
+    )
     return () => unsub()
   }, [user?.uid])
 
@@ -43,9 +50,6 @@ export default function App() {
                 </NavLink>
                 <NavLink to="/verify" className="text-slate-700 hover:text-brand">
                   Verify
-                </NavLink>
-                <NavLink to="/admin" className="text-slate-700 hover:text-brand">
-                  Admin
                 </NavLink>
                 <span className="relative inline-flex items-center">
                   <span className="text-slate-700">Inbox</span>
