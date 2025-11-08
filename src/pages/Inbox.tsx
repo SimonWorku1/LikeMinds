@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import Card from '../components/Card'
 import Button from '../components/Button'
 import Avatar from '../components/Avatar'
-import { markRead } from '../hooks/useChat'
+import { markRead, deleteChatThread } from '../hooks/useChat'
 
 type ChatRow = {
   id: string
@@ -77,14 +77,33 @@ export default function Inbox() {
                   )}
                 </div>
               </div>
-              <Button
-                onClick={async () => {
-                  await markRead(c.id, user.uid)
-                  navigate(`/chat/${c.id}`)
-                }}
-              >
-                Open
-              </Button>
+              <div className="flex items-center gap-2">
+                <Button
+                  onClick={async () => {
+                    await markRead(c.id, user.uid)
+                    navigate(`/chat/${c.id}`)
+                  }}
+                >
+                  Open
+                </Button>
+                <Button
+                  variant="ghost"
+                  className="text-red-600 hover:bg-red-50"
+                  onClick={async () => {
+                    const yes = window.confirm('Delete this conversation for both participants?')
+                    if (!yes) return
+                    try {
+                      await deleteChatThread(c.id, user.uid)
+                    } catch (e) {
+                      // eslint-disable-next-line no-console
+                      console.warn('Failed to delete chat', e)
+                      alert('Failed to delete chat. Check your permissions.')
+                    }
+                  }}
+                >
+                  Delete
+                </Button>
+              </div>
             </Card>
           ))}
         </div>

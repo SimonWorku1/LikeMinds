@@ -48,9 +48,6 @@ export default function App() {
                 <NavLink to="/profile" className="text-slate-700 hover:text-brand">
                   Profile
                 </NavLink>
-                <NavLink to="/verify" className="text-slate-700 hover:text-brand">
-                  Verify
-                </NavLink>
                 <NavLink to="/inbox" className="relative inline-flex items-center text-slate-700 hover:text-brand">
                   <span>Inbox</span>
                   {unread > 0 && (

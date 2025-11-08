@@ -4,6 +4,7 @@ import Card from '../components/Card'
 import Button from '../components/Button'
 import { useAuth } from '../hooks/useAuth'
 import { db } from '../firebase'
+import { Link } from 'react-router-dom'
 
 const fallbackSubjects: { id: string; name: string }[] = [
   { id: 'cs', name: 'Computer Science' },
@@ -26,6 +27,7 @@ export default function Profile() {
   const [newTopic, setNewTopic] = useState('')
   const [allSubjects, setAllSubjects] = useState<{ id: string; name: string }[]>([])
   const [setupBanner, setSetupBanner] = useState(false)
+  const [listed, setListed] = useState<boolean>(true)
 
   useEffect(() => {
     if (!user) return
@@ -38,6 +40,7 @@ export default function Profile() {
       setSchool(data.school || '')
       setSubjects(Array.isArray(data.subjects) ? data.subjects : [])
       setTopics(Array.isArray(data.topics) ? data.topics : [])
+      setListed(data.listed !== false) // default to true if missing
     })()
   }, [user?.uid])
 
@@ -142,6 +145,29 @@ export default function Profile() {
           <Button onClick={save}>Save</Button>
         </div>
       </Card>
+      {(user as any)?.role === 'tutor' && (
+        <div className="mt-4 flex items-center gap-2">
+          <Button
+            variant={listed ? 'ghost' : 'primary'}
+            onClick={async () => {
+              if (!user) return
+              const next = !listed
+              await setDoc(doc(db, 'users', user.uid), { listed: next }, { merge: true })
+              setListed(next)
+            }}
+          >
+            {listed ? 'Pause tutor listing' : 'Resume tutor listing'}
+          </Button>
+          <span className="text-sm text-slate-600">
+            {listed ? 'You are currently visible on Home.' : 'You are hidden from Home (still verified).'}
+          </span>
+        </div>
+      )}
+      {(!((user as any)?.role === 'tutor' && (user as any)?.verified === true)) && (
+        <div className="mt-4">
+          <Link to="/profile/verify" className="btn btn-primary">Become a tutor!</Link>
+        </div>
+      )}
     </div>
   )
 }

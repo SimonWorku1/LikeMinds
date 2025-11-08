@@ -14,13 +14,16 @@ export type Tutor = {
 export default function TutorCard({
   tutor,
   subjectName,
+  currentUid,
   onStartChat
 }: {
   tutor: Tutor
   subjectName?: string
+  currentUid?: string
   onStartChat: (uid: string) => void
 }) {
   const courses = tutor.courses || tutor.topics || []
+  const isSelf = currentUid === tutor.uid
   return (
     <Card className="p-5">
       <div className="flex items-center gap-4">
@@ -42,7 +45,14 @@ export default function TutorCard({
         </div>
       )}
       <div className="mt-5">
-        <Button onClick={() => onStartChat(tutor.uid)} className="w-full">Contact</Button>
+        <Button
+          onClick={() => onStartChat(tutor.uid)}
+          className="w-full"
+          disabled={isSelf}
+          title={isSelf ? "You can't contact yourself" : undefined}
+        >
+          {isSelf ? 'Your profile' : 'Contact'}
+        </Button>
       </div>
     </Card>
   )

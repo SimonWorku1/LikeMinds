@@ -1,4 +1,4 @@
-import { addDoc, collection, doc, getDoc, onSnapshot, orderBy, query, serverTimestamp, setDoc, updateDoc, where, writeBatch, getDocs, limit } from 'firebase/firestore'
+import { addDoc, collection, deleteDoc, doc, getDoc, onSnapshot, orderBy, query, serverTimestamp, setDoc, updateDoc, where, writeBatch, getDocs, limit } from 'firebase/firestore'
 import { useEffect, useMemo, useState } from 'react'
 import { db } from '../firebase'
 
@@ -43,6 +43,9 @@ export function useChat(chatId?: string) {
 }
 
 export async function createOrGetChat(studentId: string, tutorId: string) {
+  if (studentId === tutorId) {
+    throw new Error('Cannot start a chat with yourself.')
+  }
   // Try to find an existing chat between student and tutor
   const chatsRef = collection(db, 'chats')
   const q = query(
@@ -89,6 +92,28 @@ export async function markRead(chatId: string, viewerId: string) {
   await updateDoc(chatRef, {
     [`unread.${viewerId}`]: 0
   } as any)
+}
+
+export async function deleteChatThread(chatId: string, requesterId: string) {
+  const chatRef = doc(db, 'chats', chatId)
+  const chatSnap = await getDoc(chatRef)
+  if (!chatSnap.exists()) return
+  const data = chatSnap.data() as any
+  if (!(Array.isArray(data.participantIds) && data.participantIds.includes(requesterId))) {
+    throw new Error('Not authorized to delete this chat.')
+  }
+  // Delete messages in batches
+  const messagesRef = collection(chatRef, 'messages')
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    const batchQuery = query(messagesRef, orderBy('createdAt'), limit(100))
+    const batchSnap = await getDocs(batchQuery)
+    if (batchSnap.empty) break
+    const batch = writeBatch(db)
+    batchSnap.docs.forEach((d) => batch.delete(d.ref))
+    await batch.commit()
+  }
+  await deleteDoc(chatRef)
 }
 
 

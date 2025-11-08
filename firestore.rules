@@ -1,3 +1,4 @@
+// Firestore
 rules_version = '2';
 service cloud.firestore {
   match /databases/{db}/documents {
@@ -11,8 +12,6 @@ service cloud.firestore {
     match /users/{uid} {
       allow read: if isSignedIn();
       allow create: if isOwner(uid);
-      // Allow owners to update their doc normally, but block role/verified changes
-      // unless they have an approved verification submission.
       allow update: if isOwner(uid) && (
         !('role' in request.resource.data || 'verified' in request.resource.data)
         ||
@@ -25,7 +24,6 @@ service cloud.firestore {
     }
 
     match /verificationSubmissions/{uid} {
-      // Allow the owner to create and update their submission; they may set status 'approved' automatically.
       allow create: if isOwner(uid);
       allow read: if isOwner(uid) || isAdmin();
       allow update: if isOwner(uid) || isAdmin();
@@ -36,14 +34,12 @@ service cloud.firestore {
 
     match /chats/{chatId} {
       allow create: if isSignedIn() && request.auth.uid in request.resource.data.participantIds;
-      allow read, update: if isSignedIn() && request.auth.uid in resource.data.participantIds;
+      allow read, update, delete: if isSignedIn() && request.auth.uid in resource.data.participantIds;
     }
 
     match /chats/{chatId}/messages/{msgId} {
-      allow read, create: if isSignedIn() &&
+      allow read, create, delete: if isSignedIn() &&
         request.auth.uid in get(/databases/$(db)/documents/chats/$(chatId)).data.participantIds;
     }
   }
 }
-
-

@@ -47,7 +47,8 @@ export default function VerifyTutor() {
     // Update the user record to tutor + verified
     await setDoc(doc(db, 'users', user.uid), {
       role: 'tutor',
-      verified: true
+      verified: true,
+      listed: true
     }, { merge: true })
     setStatus('approved')
     navigate('/profile?setup=tutor')

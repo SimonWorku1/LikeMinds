@@ -52,16 +52,19 @@ export default function Landing() {
       const unsub = onSnapshot(
         qTutors,
         (snap) => {
-          const list = snap.docs.map((d) => {
-            const data = d.data() as any
-            return {
-              uid: d.id,
-              displayName: data.displayName || 'Tutor',
-              topics: data.topics || [],
-              school: data.school,
-              photoURL: data.photoURL || null
-            } as Tutor
-          })
+          const list = snap.docs
+            .map((d) => {
+              const data = d.data() as any
+              if (data.listed === false) return null
+              return {
+                uid: d.id,
+                displayName: data.displayName || 'Tutor',
+                topics: data.topics || [],
+                school: data.school,
+                photoURL: data.photoURL || null
+              } as Tutor
+            })
+            .filter(Boolean) as Tutor[]
           setTutorsBySubject((prev) => ({ ...prev, [s.id]: list }))
         },
         (err) => {
@@ -96,7 +99,7 @@ export default function Landing() {
         .map((s) => (
           <FieldDivider key={s.id} title={s.name}>
             {(tutorsBySubject[s.id] || []).map((t) => (
-              <TutorCard key={t.uid} tutor={t} subjectName={s.name} onStartChat={startChat} />
+              <TutorCard key={t.uid} tutor={t} subjectName={s.name} currentUid={user?.uid} onStartChat={startChat} />
             ))}
           </FieldDivider>
         ))}

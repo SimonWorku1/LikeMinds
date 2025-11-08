@@ -20,10 +20,11 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Landing /> },
       { path: 'auth', element: <Auth /> },
-      { path: 'verify', element: <VerifyTutor /> },
+      { path: 'verify', element: <VerifyTutor /> }, // keep for backward-compat
       { path: 'inbox', element: <Inbox /> },
       { path: 'chat/:chatId', element: <ChatPage /> },
-      { path: 'profile', element: <Profile /> }
+      { path: 'profile', element: <Profile /> },
+      { path: 'profile/verify', element: <VerifyTutor /> }
     ]
   }
 ])
